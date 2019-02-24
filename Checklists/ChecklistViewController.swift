@@ -11,9 +11,25 @@ import UIKit
 class ChecklistViewController: UITableViewController {
     var items = [ChecklistItem]()
     
-
+    // MARK:- Actions
+    @IBAction func addItem() {
+        let newRowIndex = items.count
+        
+        let item = ChecklistItem()
+        item.text = "I am a new row"
+        item.checked = true
+        items.append(item)
+        
+        let indexPath = IndexPath(row: newRowIndex, section: 0)
+        let indexPaths = [indexPath]
+        tableView.insertRows(at: indexPaths, with: .automatic)
+        
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //adding option to displaying large titles in navigation bar
+        navigationController?.navigationBar.prefersLargeTitles = true
         
         let item1 = ChecklistItem()
         item1.text = "Walk the dog"
@@ -64,6 +80,14 @@ class ChecklistViewController: UITableViewController {
         return cell
     }
     
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        //1 Remove the item from the Data Model
+        items.remove(at: indexPath.row)
+        
+        //2 Delete the corresponding row from table view
+        let indexPaths = [indexPath]
+        tableView.deleteRows(at: indexPaths, with: .automatic)
+    }
     
     func configureCheckmark(for cell: UITableViewCell,
                             with item: ChecklistItem) {

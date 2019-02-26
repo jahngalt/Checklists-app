@@ -7,29 +7,45 @@
 //
 
 import UIKit
+protocol AddItemViewControllerDelegate: class {
+    func addItemViewControllerDidCancell(_ controller: AddItemViewController)
+    func addItemViewController(_ controller: AddItemViewController, didFinishAdding item: ChecklistItem)
+}
 
-class AddItemTableViewController: UITableViewController, UITextFieldDelegate {
+class AddItemViewController: UITableViewController, UITextFieldDelegate {
 
     @IBOutlet weak var textFIeld: UITextField!
     
     @IBOutlet weak var doneBarButton: UIBarButtonItem!
     
+    weak var delegate: AddItemViewControllerDelegate?
+    
+    var itemToEdit: ChecklistItem?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
 
     navigationItem.largeTitleDisplayMode = .never
+        
+        
+        if let item = itemToEdit {
+            title = "Edit item"
+            textFIeld.text = item.text
+        }
     }
     
     // MARK:- Actions
     @IBAction func cancel() {
-        navigationController?.popViewController(animated: true)
+        delegate?.addItemViewControllerDidCancell(self)
+        
     }
     @IBAction func done() {
         //Read the value from the user input
-        print("Contents of the text field: \(textFIeld.text!)")
+        let item = ChecklistItem()
+        item.text = textFIeld.text!
         
-        
-        navigationController?.popViewController(animated: true)
+        delegate?.addItemViewController(self, didFinishAdding: item)
     }
     
     // MARK:- Auto opened keyboard
@@ -51,11 +67,7 @@ class AddItemTableViewController: UITableViewController, UITextFieldDelegate {
         let stringRange = Range(range, in: oldText)!
         let newText = oldText.replacingCharacters(in: stringRange, with: string)
         
-        if newText.isEmpty {
-            doneBarButton.isEnabled = false
-        } else {
-            doneBarButton.isEnabled = true
-        }
+        doneBarButton.isEnabled = !newText.isEmpty
         return true
     }
     

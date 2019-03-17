@@ -15,7 +15,6 @@ protocol AddItemViewControllerDelegate: class {
 class AddItemViewController: UITableViewController, UITextFieldDelegate {
 
     @IBOutlet weak var textFIeld: UITextField!
-    
     @IBOutlet weak var doneBarButton: UIBarButtonItem!
     
     weak var delegate: AddItemViewControllerDelegate?
@@ -24,10 +23,8 @@ class AddItemViewController: UITableViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-
+    
     navigationItem.largeTitleDisplayMode = .never
-        
         
         if let item = itemToEdit {
             title = "Edit item"
